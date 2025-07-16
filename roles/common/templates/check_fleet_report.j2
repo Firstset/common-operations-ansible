@@ -1,5 +1,8 @@
 ========= {{ inventory_hostname }} =========
 Kernel version: {{ kernel_ver.stdout }}
+Uptime: {{ os_uptime.stdout.replace("up ", "") }}
+
+{% if services_report %}
 Key services:
 
 {% for svc in systemd_services_to_check %}
@@ -9,8 +12,11 @@ last 10 log lines:
 ----
 
 {% endfor %}
+{% endif %}
 
+{% if binaries_report %}
 Key binaries:
 {% for bin in binaries_report %}
 {{ bin }} version -> {{ binaries_report[bin] }}
 {% endfor %}
+{% endif %}

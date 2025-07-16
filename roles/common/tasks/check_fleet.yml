@@ -8,11 +8,13 @@
   command: uname -r
   register: kernel_ver
   changed_when: false
+  tags: os
 
 - name: Collect OS uptime
   command: uptime -p
   register: os_uptime
   changed_when: false
+  tags: os
 
 - name: Collect state + status only for requested units
   shell: systemctl show -p ActiveState -p UnitFileState -p ActiveEnterTimestamp --value {{ item }}
@@ -20,6 +22,7 @@
   changed_when: false # read-only
   failed_when: false # keep going if unit missing
   loop: "{{ systemd_services_to_check }}"
+  tags: service
 
 - name: Get log tail for services
   shell: journalctl -u {{ item }}.service -n 10 --no-pager
@@ -27,6 +30,7 @@
   changed_when: false
   failed_when: false
   loop: "{{ systemd_services_to_check }}"
+  tags: service
 
 - name: Build service_logs_dict from list
   set_fact:
@@ -34,6 +38,7 @@
   loop: "{{ service_logs.results }}"
   when: not item.skipped | default(false)
   no_log: true
+  tags: service
 
 - name: Build services_report
   set_fact:
@@ -48,6 +53,7 @@
   loop: "{{ service_states.results }}"
   when: not item.skipped | default(false)
   no_log: true
+  tags: service
 
 - name: Get binary versions
   command: "{{ item.value.path }} {{ item.value.option }}"
@@ -55,6 +61,7 @@
   changed_when: false
   failed_when: false
   loop: "{{ binaries_to_check | dict2items }}"
+  tags: binary
 
 - name: Build binaries_report
   set_fact:
@@ -62,6 +69,7 @@
   loop: "{{ binary_versions.results }}"
   when: not item.skipped | default(false)
   no_log: true
+  tags: binary
 
 - name: Set fact host_report
   set_fact:
