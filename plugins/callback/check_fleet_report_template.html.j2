@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Check Fleet Report</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+      }
+      .table-container {
+          overflow-x: auto;
+      }
+      table {
+          border-collapse: collapse;
+          margin: auto;
+          white-space: nowrap;
+      }
+      th, td {
+          padding: 8px 12px;
+          border: 1px solid #ccc;
+          text-align: center;
+      }
+      th {
+          background-color: #f2f2f2;
+      }
+      /* Sticky first column */
+      th:first-child,
+      td:first-child {
+          position: sticky;
+          left: 0;
+          z-index: 1;
+      }
+      /* Make header stick above first column when overlapping */
+      thead th:first-child {
+          z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align: center;">Check Fleet Report</h2>
+    <div class="table-container">
+        {{ table_html | safe }}
+    </div>
+  </body>
+</html>
