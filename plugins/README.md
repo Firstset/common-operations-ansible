@@ -1,31 +1,18 @@
 # Collections Plugins Directory
 
-This directory can be used to ship various plugins inside an Ansible collection. Each plugin is placed in a folder that
-is named after the type of plugin it is in. It can also include the `module_utils` and `modules` directory that
-would contain module utils and modules respectively.
+## firstset.common_operations.report
 
-Here is an example directory of the majority of plugins currently supported by Ansible:
+This plugin generates a nice HTML report page for the check fleet task. In order to use this plugin, you need to install the following Python packages (assuming you have already installed Ansible):
 
 ```
-└── plugins
-    ├── action
-    ├── become
-    ├── cache
-    ├── callback
-    ├── cliconf
-    ├── connection
-    ├── filter
-    ├── httpapi
-    ├── inventory
-    ├── lookup
-    ├── module_utils
-    ├── modules
-    ├── netconf
-    ├── shell
-    ├── strategy
-    ├── terminal
-    ├── test
-    └── vars
+pip install humanize pandas
 ```
 
-A full list of plugin types can be found at [Working With Plugins](https://docs.ansible.com/ansible-core/2.18/plugins/plugins.html).
+Create or modify the `ansible.cfg` file in your Ansible project directory to include the plugin:
+
+```ini
+[defaults]
+callbacks_enabled = firstset.common_operations.report # comma separated list of plugins
+```
+
+After enabling the plugin, when you executed the check fleet tasks in the `common` role, an enhanced report will be generated and opened by the default browser.
