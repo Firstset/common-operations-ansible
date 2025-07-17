@@ -90,19 +90,23 @@ class CallbackModule(CallbackBase):
         else:
             return
 
-    def playbook_on_stats(self, _):
-        # Generate and save HTML table
-        table_html = self.summary.to_html(border=1, justify="center", escape=False)
+    def playbook_on_stats(self, stats):
+        role = getattr(stats._task, "_role", None)
+        if str(role) == "firstset.common_operations.common":
+            # Generate and save HTML table
+            table_html = self.summary.to_html(border=1, justify="center", escape=False)
 
-        # Dynamically locate the template relative to this file
-        this_dir = os.path.dirname(__file__)
-        env = Environment(loader=FileSystemLoader(this_dir))
-        template = env.get_template("check_fleet_report_template.html.j2")
-        rendered_html = template.render(table_html=table_html)
+            # Dynamically locate the template relative to this file
+            this_dir = os.path.dirname(__file__)
+            env = Environment(loader=FileSystemLoader(this_dir))
+            template = env.get_template("check_fleet_report_template.html.j2")
+            rendered_html = template.render(table_html=table_html)
 
-        # Construct a reusable file in the OS temp directory
-        report_path = Path(tempfile.gettempdir()) / "check_fleet_report.html"
-        report_path.write_text(rendered_html, encoding="utf-8")
+            # Construct a reusable file in the OS temp directory
+            report_path = Path(tempfile.gettempdir()) / "check_fleet_report.html"
+            report_path.write_text(rendered_html, encoding="utf-8")
 
-        # Open in default browser
-        webbrowser.open(f"file://{report_path}")
+            # Open in default browser
+            webbrowser.open(f"file://{report_path}")
+        else:
+            return
