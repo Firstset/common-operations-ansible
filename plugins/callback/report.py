@@ -33,6 +33,7 @@ class CallbackModule(CallbackBase):
             columns=pd.MultiIndex.from_tuples([("Kernel", ""), ("Uptime", "")])
         )
         self.summary.index.name = "host"
+        self.show_report = False
 
     def v2_runner_on_ok(self, result):
         role = getattr(result._task, "_role", None)
@@ -87,12 +88,12 @@ class CallbackModule(CallbackBase):
                     self._display.display(
                         f"[{result._host.get_name()}] HOST REPORT:\n{report}"
                     )
+                    self.show_report = True
         else:
             return
 
-    def playbook_on_stats(self, stats):
-        role = getattr(stats._task, "_role", None)
-        if str(role) == "firstset.common_operations.common":
+    def playbook_on_stats(self, _):
+        if self.show_report:
             # Generate and save HTML table
             table_html = self.summary.to_html(border=1, justify="center", escape=False)
 
