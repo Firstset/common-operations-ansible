@@ -95,6 +95,7 @@ class CallbackModule(CallbackBase):
     def playbook_on_stats(self, _):
         if self.show_report:
             # Generate and save HTML table
+            self.summary.sort_index(inplace=True)
             table_html = self.summary.to_html(border=1, justify="center", escape=False)
 
             # Dynamically locate the template relative to this file
